@@ -1,6 +1,6 @@
 # Agent Guide
 
-This repository contains **拜拜小怪**, a standalone, Bun-first Next.js application for a short game-like emotional reset flow.
+This repository contains **拜拜小怪**, a standalone, Bun-first Next.js clicker game about defeating everyday emotional "monsters".
 
 ## Stack
 
@@ -25,14 +25,15 @@ bun start
 
 | Route | Screen | Purpose |
 |---|---|---|
-| `/` | `EncounterScreen` | Pick a monster representing today's friction |
-| `/naming` | `NamingScreen` | Name the feeling or obstacle |
-| `/recovery` | `HealScreen` | Complete a small recovery action |
-| `/strike` | `StrikeScreen` | Perform the concrete action |
-| `/trophy` | `TrophyScreen` | Receive and share the completion card |
-| `/history` | `HistoryScreen` | Browse locally stored history and statistics |
+| `/` | `HomeScreen` | Show today's current stage and start combat in one tap |
+| `/strike` | `StrikeScreen` | Click combat, damage effects, skills and reward choice |
+| `/trophy` | `TrophyScreen` | Receive/share the result card and nickname the defeated monster |
+| `/history` | `HistoryScreen` | View local simulated leaderboards and records |
+| `/shop` | `ShopScreen` | Spend virtual coins on skills and collectibles |
+| `/challenge` | `EncounterScreen` | Optional legacy daily challenge with monster selection |
+| `/naming`, `/recovery` | Legacy screens | Optional challenge steps retained after the main-flow redesign |
 
-The shared flow state lives in `src/stores/useMonsterStore.ts`. Completed records are saved in browser storage by `src/lib/battle-history.ts`; preserve this offline-first behavior unless the user explicitly requests a server-backed account or sync feature.
+The transient battle flow state lives in `src/stores/useMonsterStore.ts`. Progress, skills, coins, and click statistics are saved by `src/lib/game-progress.ts`; battle cards/history are saved by `src/lib/battle-history.ts`. Preserve this offline-first behavior unless the user explicitly requests a server-backed account or sync feature.
 
 ## Structure
 
@@ -44,11 +45,14 @@ src/
     <route>/page.tsx         Thin route entries
     opengraph-image.tsx      Social preview image
   components/
+    game/                    Combat-facing reusable UI
     screens/                 Feature screens
     ui/                      Reusable UI primitives
     BottomNav.tsx            Global mobile navigation
   lib/
     battle-history.ts        Local record persistence and aggregation
+    game-config.ts           Stages, skills and shop inventory
+    game-progress.ts         Local progression and economy
     monsters-data.ts         Monster definitions and copy
   stores/
     useMonsterStore.ts       Current encounter state

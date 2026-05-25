@@ -1,11 +1,12 @@
 import { ImageResponse } from 'next/og';
 
+export const dynamic = "force-static";
 export const alt = "拜拜小怪 app preview";
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 const appName = "拜拜小怪";
-const description = "一款游戏化情绪陪伴应用。用命名、回血和出招三个轻量步骤，打跑拖延、压力和脑雾。";
+const description = "1 秒开打，连击成长。用漫画式点击战斗打跑拖延、压力和脑雾。";
 const icon = "🎯";
 
 function isImageIcon(value: string) {

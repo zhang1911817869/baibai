@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useMonsterStore } from "@/stores/useMonsterStore";
+import { BATTLE_STAGES } from "@/lib/game-config";
 import { MONSTERS, Monster } from "@/lib/monsters-data";
 import type { ReactElement } from "react";
 
@@ -247,7 +248,7 @@ function CuteMonster({ id, size = 72 }: { id: string; size?: number }) {
 }
 
 export default function EncounterScreen() {
-  const { setMonster } = useMonsterStore();
+  const { beginBattle } = useMonsterStore();
   const [selected, setSelected] = useState<Monster | null>(null);
   const [popped, setPopped] = useState<Set<number>>(new Set());
   const allPopped = popped.size >= CLOUD_EMOJIS.length;
@@ -358,7 +359,13 @@ export default function EncounterScreen() {
 
         {/* CTA */}
         {selected ? (
-          <Link href="/naming" onClick={()=>setMonster(selected)}>
+          <Link
+            href="/naming"
+            onClick={() => beginBattle(
+              selected,
+              BATTLE_STAGES.find((stage) => stage.monster.id === selected.id)?.index ?? 0,
+            )}
+          >
             <motion.button className="w-full py-4 font-black text-lg flex items-center justify-center gap-2"
               style={{...SKB,background:"#E8AA42",color:"#2C2C2C",...FH}}
               whileTap={{scale:0.96}}>

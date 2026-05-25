@@ -7,17 +7,22 @@ import { motion } from "framer-motion";
 const tabs = [
   {
     href: "/",
-    label: "今日手账",
+    label: "开打",
     svgPath: "M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10",
   },
   {
     href: "/history",
-    label: "怪兽图鉴",
+    label: "排行",
     svgPath: "M4 6h16M4 10h16M4 14h10M4 18h6",
+  },
+  {
+    href: "/shop",
+    label: "商店",
+    svgPath: "M6 8l1-4h10l1 4M5 8h14l-1 12H6L5 8z M9 12h6",
   },
 ];
 
-const GAME_ROUTES = ["/naming", "/recovery", "/strike", "/trophy"];
+const GAME_ROUTES = ["/challenge", "/naming", "/recovery", "/strike", "/trophy"];
 
 export function BottomNav() {
   const pathname = usePathname();

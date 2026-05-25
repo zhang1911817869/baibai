@@ -1,5 +1,5 @@
-import EncounterScreen from "@/components/screens/EncounterScreen";
+import HomeScreen from "@/components/screens/HomeScreen";
 
 export default function HomePage() {
-  return <EncounterScreen />;
+  return <HomeScreen />;
 }

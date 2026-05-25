@@ -23,7 +23,7 @@ const SITE_URL =
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
 
 const SITE_TITLE = "拜拜小怪";
-const SITE_DESCRIPTION = "游戏化情绪陪伴——打怪打跑拖延、压力、脑雾，全程1分钟，输入即爽。";
+const SITE_DESCRIPTION = "1 秒开打的轻量点击小游戏：连击、暴击、技能成长，打跑拖延、压力和脑雾。";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

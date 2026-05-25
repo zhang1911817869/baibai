@@ -1,9 +1,14 @@
 export interface BattleRecord {
   id: number;
+  monsterId?: string;
   monsterNickname: string;
   actionTaken: string;
   stars: number;
   createdAt: string;
+  clicks?: number;
+  maxCombo?: number;
+  coinsEarned?: number;
+  skillAwarded?: string;
 }
 
 export interface BattleSummary {
@@ -39,8 +44,8 @@ export function getBattleRecords(): BattleRecord[] {
 }
 
 export function saveBattleRecord(
-  data: Pick<BattleRecord, "monsterNickname" | "actionTaken">,
-): void {
+  data: Omit<BattleRecord, "id" | "stars" | "createdAt">,
+): BattleRecord {
   const record: BattleRecord = {
     ...data,
     id: Date.now(),
@@ -52,6 +57,18 @@ export function saveBattleRecord(
     STORAGE_KEY,
     JSON.stringify([record, ...getBattleRecords()].slice(0, MAX_RECORDS)),
   );
+
+  return record;
+}
+
+export function updateBattleRecord(
+  id: number,
+  updates: Partial<Pick<BattleRecord, "monsterNickname" | "skillAwarded">>,
+): void {
+  const records = getBattleRecords().map((record) =>
+    record.id === id ? { ...record, ...updates } : record,
+  );
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
 }
 
 export function getBattleSummary(records: BattleRecord[]): BattleSummary[] {
