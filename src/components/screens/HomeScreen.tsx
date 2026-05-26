@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { CoinIcon } from "@/components/game/coin-icon";
 import { MonsterAvatar } from "@/components/game/monster-avatar";
+import { SoundToggle } from "@/components/game/sound-toggle";
+import { playGameSound } from "@/lib/game-audio";
 import { BATTLE_STAGES, getStage } from "@/lib/game-config";
 import { getGameProgress, getRewardPreview, getTitle, type GameProgress } from "@/lib/game-progress";
 import { useMonsterStore } from "@/stores/useMonsterStore";
@@ -39,6 +41,7 @@ export default function HomeScreen() {
   const weakPointText = isNewUser ? "前 5 连点就会打更痛" : stage.weakness;
 
   const startBattle = () => {
+    playGameSound("start");
     beginBattle(stage.monster, stage.index);
     router.push("/strike");
   };
@@ -46,7 +49,10 @@ export default function HomeScreen() {
   return (
     <div className="relative min-h-svh overflow-hidden bg-[#FAF6EE] px-4 pb-[5.75rem] pt-[max(0.7rem,env(safe-area-inset-top))] sm:px-5 sm:pt-5">
       <div className="mx-auto max-w-[22rem] space-y-2.5 sm:space-y-3">
-        <header className="text-center">
+        <header className="relative text-center">
+          <SoundToggle
+            className="absolute right-0 top-0 flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#8E8677]"
+          />
           <h1 className="text-[2rem] leading-none font-black text-[#2C2C2C] sm:text-4xl" style={FH}>拜拜小怪</h1>
           <p className="mt-1 text-[12px] font-semibold text-[#5F594F] sm:text-sm">不是你有问题，是小怪来捣乱了。</p>
         </header>

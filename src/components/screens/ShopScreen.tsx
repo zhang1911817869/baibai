@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { CoinIcon } from "@/components/game/coin-icon";
 import { SHOP_ITEMS } from "@/lib/game-config";
+import { playGameSound } from "@/lib/game-audio";
 import { getGameProgress, getSkillLevel, purchaseItem, type GameProgress } from "@/lib/game-progress";
 
 const SKB = { border: "2.5px solid #2C2C2C", borderRadius: "4px 7px 5px 8px" as const, boxShadow: "3px 3px 0 #2C2C2C" };
@@ -29,6 +30,7 @@ export default function ShopScreen() {
     const result = purchaseItem(item);
     setProgress(result.progress);
     setMessage(result.ok ? `已获得「${item.name}」！马上去试试。` : "金币不够，先去揍一只小怪吧。");
+    playGameSound(result.ok ? "coin" : "error");
   };
 
   return (

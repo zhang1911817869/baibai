@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { CoinIcon } from "@/components/game/coin-icon";
 import { getBattleRecords, updateBattleRecord, type BattleRecord } from "@/lib/battle-history";
+import { playGameSound } from "@/lib/game-audio";
 import { BATTLE_STAGES, getSkill, getStage } from "@/lib/game-config";
 import { getGameProgress, getTitle, type GameProgress } from "@/lib/game-progress";
 import { useMonsterStore } from "@/stores/useMonsterStore";
@@ -55,6 +56,7 @@ export default function TrophyScreen() {
   };
 
   const playNext = () => {
+    playGameSound("start");
     beginBattle(nextStage.monster, nextStage.index);
     router.push("/strike");
   };

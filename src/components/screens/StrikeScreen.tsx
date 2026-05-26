@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 import { CoinIcon } from "@/components/game/coin-icon";
 import { MonsterAvatar } from "@/components/game/monster-avatar";
 import { SkillChoicePanel } from "@/components/game/skill-choice-panel";
+import { SoundToggle } from "@/components/game/sound-toggle";
 import { saveBattleRecord, updateBattleRecord } from "@/lib/battle-history";
+import { playGameSound } from "@/lib/game-audio";
 import { BATTLE_STAGES, getSkillChoices, getStage, type SkillDefinition } from "@/lib/game-config";
 import {
   acquireSkill,
@@ -99,6 +101,7 @@ export default function StrikeScreen() {
       progress: reward.progress,
       awardedSkill: null,
     });
+    playGameSound("clear");
     controls.start({ rotate: [0, -10, 10, -6, 0], scale: [1, 1.16, 0.86, 1], transition: { duration: 0.55 } });
   }, [controls, monster, setLastBattle, stage.index]);
 
@@ -124,6 +127,7 @@ export default function StrikeScreen() {
     const comboDamage = noviceComboDamage + skillComboDamage;
     const critical = skillLevels.critical > 0 && Math.random() < Math.min(0.12 + skillLevels.critical * 0.08, 0.48);
     const damage = (1 + comboDamage) * (critical ? 3 : 1);
+    playGameSound(critical ? "critical" : nextCombo >= 5 && nextCombo % 5 === 0 ? "combo" : "hit");
     navigator.vibrate?.(critical ? 18 : 8);
     clicksRef.current = nextClicks;
     maxComboRef.current = Math.max(maxComboRef.current, nextCombo);
@@ -137,6 +141,7 @@ export default function StrikeScreen() {
   const useBomb = () => {
     if (bombUsed || skillLevels.bomb === 0 || hpRef.current === null) return;
     setBombUsed(true);
+    playGameSound("bomb");
     const damage = Math.ceil(stage.maxHp * 0.3) + (skillLevels.bomb - 1) * 10;
     damageMonster(damage, "BOOM!", clicks, battleMaxCombo);
   };
@@ -144,12 +149,14 @@ export default function StrikeScreen() {
   useEffect(() => {
     if (skillLevels.auto === 0 || defeated || hpRef.current === null) return;
     const intervalId = window.setInterval(() => {
+      playGameSound("auto");
       damageMonster(skillLevels.auto, "AUTO", clicksRef.current, maxComboRef.current);
     }, 1000);
     return () => window.clearInterval(intervalId);
   }, [damageMonster, defeated, skillLevels.auto]);
 
   const chooseSkill = (skill: SkillDefinition) => {
+    playGameSound("skill");
     const updated = acquireSkill(skill.id);
     const result = useMonsterStore.getState().lastBattle;
     if (result) updateBattleRecord(result.recordId, { skillAwarded: skill.name });
@@ -169,10 +176,13 @@ export default function StrikeScreen() {
         <header className="flex justify-between items-center">
           <button className="text-xs font-bold px-3 py-1.5 bg-white" style={SKB} onClick={() => router.push("/")}>← 逃跑</button>
           <span className="text-xs font-black text-[#E27B66]" style={FH}>STAGE {stage.index + 1} / {BATTLE_STAGES.length}</span>
-          <span className="flex items-center gap-1 text-xs font-black text-[#E8AA42]">
-            <CoinIcon className="h-4 w-4" />
-            {progress.coins}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="flex items-center gap-1 text-xs font-black text-[#E8AA42]">
+              <CoinIcon className="h-4 w-4" />
+              {progress.coins}
+            </span>
+            <SoundToggle className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#8E8677]" />
+          </div>
         </header>
 
         <section className="bg-white p-3" style={SKB}>
